@@ -94,13 +94,13 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
     list_to_pass_over = list_to_pass_over[:max(initial_population_size - number_of_ind_to_cross - elite_count, 0)]
     while len(list_to_pass_over) > 0:
         pop = list_to_pass_over.pop()
-        print(f"len population: {len(population)} | last list_to_pass_over: {pop}")
+        #print(f"len population: {len(population)} | last list_to_pass_over: {pop}")
         new_population.append(population[pop])
 
     first_parent_idx = list_to_cross_over.pop()
     second_parent_idx = list_to_cross_over.pop()
     while len(list_to_cross_over) > 1:
-        print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
+        #print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
         ind_1 = population[first_parent_idx]
         ind_2 = population[second_parent_idx]
         ind_1_back = ind_1[:, split_rate:]
@@ -145,6 +145,7 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
                 new_population.append(population[second_parent_idx])
         first_parent_idx = list_to_cross_over.pop()
         second_parent_idx = list_to_cross_over.pop()
+    print(f"crossing size:{len(new_population)}")
     return new_population
 
 
@@ -220,7 +221,7 @@ def bag_sum(individual, weight_dict, bag_no):
 
 def count_rate(individual, weight_dict):
     used_gifts = np.sum(individual, axis=0)
-    return np.sum(weight_dict*used_gifts);
+    return np.sum(weight_dict*used_gifts)
 
 
 def my_generate_initial_population(weight_dict, initial_population_size):
@@ -279,21 +280,21 @@ def selection(population, weight, elite_count, initial_population_size):
     proportion_sum = 0
     for j in res:
         start_idx = end_idx
-        proportion_sum = proportion_sum + population_weights[res[j]] * len(random_list) / population_sum
+        proportion_sum = proportion_sum + population_weights[j] * len(random_list) / population_sum
         end_idx = min(int(round(proportion_sum)), 1000)
         #print(start_idx)
         #print(end_idx)
         for k in range(start_idx, end_idx):
             #print(f"{k}: {len(proportions_indication_list)} | {j}: {len(res)} ")
-            print(res[j])
-            proportions_indication_list[k] = res[j]
+            #print(j)
+            proportions_indication_list[k] = j
     list_to_cross_over = list()
-    print(proportions_indication_list)
+    #print(proportions_indication_list)
     #print(elite_count)
     #print(initial_population_size)
     for i in range(2*(initial_population_size-elite_count)):
         list_to_cross_over.append(proportions_indication_list[random_list.pop()])
-    print(list_to_cross_over)
+    #print(list_to_cross_over)
     return list_to_cross_over
 
 
@@ -316,6 +317,19 @@ def print_bags_to_file(individual, names, weight, filename):
                 print(f"\t\t{names[i]}, {weight[i]}", file=filename)
 
 
+def get_elitists(population, elite_count, weight):
+    start = time.process_time()
+    elitists = list()
+    if elite_count == 0:
+        return elitists
+    sort = sorted(population, key=lambda g: count_rate(g, weight))
+    for i in range(elite_count):
+        elitists.append(sort[-i])
+    end = time.process_time()
+    print(f"elitasis: {end-start}s")
+    return elitists
+
+
 def algorithm(initial_population_size, elite_count, mutation_probability, cross_over_probability, max_tries, plot_name):
     name, weight = get_gift_dicts()
     start = time.process_time()
@@ -334,13 +348,16 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
           f"initial population size: {initial_population_size}", file=sample)
     print(f"Mutation probability: {mutation_probability}, Crossing-over probability: {cross_over_probability}",
           file=sample)
+    list_of_rates = list()
+
     while max_weight < limit and iteration < con.max_iterations and const_counter < con.max_iteration_with_same_max:
+        elite = get_elitists(population, elite_count, weight)
         list_to_cross_over = selection(population, weight, elite_count, initial_population_size)
         population = cross_over(population, cross_over_probability, list_to_cross_over, initial_population_size,
                                 elite_count, weight, max_tries)
 
         mutate(population, weight, mutation_probability, max_tries)
-        list_of_rates = list()
+        population.extend(elite)
         for g in population:
             w = count_rate(g, weight)
             list_of_rates.append(w)
@@ -353,7 +370,6 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
         if iteration % 100 == 0:
             print(f"Iteration: {iteration}, Maximum weight: {max(list_of_rates)}")
         iteration = iteration + 1
-        print(iteration)
     end = time.process_time()
     end1 = time.time()
     print(f"Elapsed time: {end1 - start1}s")
@@ -387,7 +403,7 @@ def main():
     #                     algorithm(0.7, 0.7, plot_name)
     timestamp1 = time.time()
     plot_name = f"Comparision-Run{timestamp1}"
-    algorithm(10, 1, 0.7, 0.7, 20, plot_name)
+    algorithm(10, 2, 0.7, 0.7, 20, plot_name)
 
 
 if __name__ == "__main__":
