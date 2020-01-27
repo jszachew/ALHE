@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e0f7ba9-1ff3-459d-86f1-7ce7c6b54993" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline.py" afterDir="false" />
     </list>
@@ -29,6 +26,35 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="RunManager">
+    <configuration name="baseline" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="projekt_repo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/baseline.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.baseline" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -40,29 +66,72 @@
       <option name="presentableId" value="Default" />
       <updated>1580146464407</updated>
       <workItem from="1580146466903" duration="32000" />
-      <workItem from="1580146500367" duration="212000" />
+      <workItem from="1580146500367" duration="1643000" />
     </task>
+    <task id="LOCAL-00001" summary="population size fixed">
+      <created>1580146820997</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1580146820997</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="population size fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="population size fixed" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="424" y="28" key="CommitChangelistDialog2" timestamp="1580146738142">
+    <state x="254" y="88" width="1089" height="705" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580147182294">
       <screen x="62" y="0" width="1474" height="864" />
     </state>
-    <state x="424" y="28" key="CommitChangelistDialog2/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580146738142" />
+    <state x="254" y="88" width="1089" height="705" key="#com.intellij.execution.impl.EditConfigurationsDialog/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580147182294" />
+    <state x="424" y="28" key="CommitChangelistDialog2" timestamp="1580146820281">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state x="424" y="28" key="CommitChangelistDialog2/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580146820281" />
     <state x="579" y="175" key="FileChooserDialogImpl" timestamp="1580146487213">
       <screen x="62" y="0" width="1474" height="864" />
     </state>
     <state x="579" y="175" key="FileChooserDialogImpl/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580146487213" />
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom" timestamp="1580148100718">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580148100718" />
+    <state width="1431" height="224" key="GridCell.Tab.0.center" timestamp="1580148100718">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.center/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580148100718" />
+    <state width="1431" height="224" key="GridCell.Tab.0.left" timestamp="1580148100718">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.left/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580148100718" />
+    <state width="1431" height="224" key="GridCell.Tab.0.right" timestamp="1580148100718">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.right/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580148100718" />
     <state x="308" y="76" key="SettingsEditor" timestamp="1580146578697">
       <screen x="62" y="0" width="1474" height="864" />
     </state>
     <state x="308" y="76" key="SettingsEditor/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580146578697" />
+    <state x="392" y="166" key="Vcs.Push.Dialog.v2" timestamp="1580147133842">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state x="392" y="166" key="Vcs.Push.Dialog.v2/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580147133842" />
     <state x="496" y="258" key="com.intellij.ide.util.TipDialog" timestamp="1580146467364">
       <screen x="62" y="0" width="1474" height="864" />
     </state>
     <state x="496" y="258" key="com.intellij.ide.util.TipDialog/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580146467364" />
+    <state x="598" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1580147186061">
+      <screen x="62" y="0" width="1474" height="864" />
+    </state>
+    <state x="598" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/62.0.1474.864/1920.0.1280.984@62.0.1474.864" timestamp="1580147186061" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/projekt_repo$baseline.coverage" NAME="baseline Coverage Results" MODIFIED="1580148100708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
