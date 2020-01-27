@@ -1,2 +1,0 @@
-Start of algorithm with max 100 iteration, initial population size: 10
-Mutation probability: 0.7, Crossing-over probability: 0.7

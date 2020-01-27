@@ -113,9 +113,11 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
         tries = max_tries
         new_1_ok = False
         new_2_ok = False
-        if not check_if_min_3_gifts_in_every_bag(new_1) and not chcek_if_all_bags_not_overloaded(new_1, weights):
+        if check_if_min_3_gifts_in_every_bag(new_1) and chcek_if_all_bags_not_overloaded(new_1, weights):
+            print("new_1_ok!")
             new_1_ok = True
-        if not check_if_min_3_gifts_in_every_bag(new_2) and not chcek_if_all_bags_not_overloaded(new_2, weights):
+        if check_if_min_3_gifts_in_every_bag(new_2) and chcek_if_all_bags_not_overloaded(new_2, weights):
+            print("new_2_ok!")
             new_2_ok = True
         while tries > 0 and len(list_of_split_rate) > 0 and not new_1_ok and not new_2_ok:
             split_rate = list_of_split_rate.pop()
@@ -125,25 +127,33 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
             ind_2_front = ind_2[:, :split_rate]
             new_1 = np.concatenate((ind_2_front, ind_1_back), axis=1)
             new_2 = np.concatenate((ind_1_front, ind_2_back), axis=1)
-            if not check_if_min_3_gifts_in_every_bag(new_1) and not chcek_if_all_bags_not_overloaded(new_1, weights):
+            if check_if_min_3_gifts_in_every_bag(new_1) and chcek_if_all_bags_not_overloaded(new_1, weights):
+                print("new_1_ok!")
                 new_1_ok = True
-            if not check_if_min_3_gifts_in_every_bag(new_2) and not chcek_if_all_bags_not_overloaded(new_2, weights):
+            if check_if_min_3_gifts_in_every_bag(new_2) and chcek_if_all_bags_not_overloaded(new_2, weights):
+                print("new_2_ok!")
                 new_2_ok = True
             tries = tries - 1
         if new_1_ok and new_2_ok:
+            print("both new ok")
             if count_rate(new_1, weights) > count_rate(new_2, weights):
                 new_population.append(new_1)
             else:
                 new_population.append(new_2)
         elif new_1_ok:
+            print("new 1 ok")
             new_population.append(new_1)
         elif new_2_ok:
+            print("new 2 ok")
             new_population.append(new_2)
         else:
             if generate_random_number() < 0.5:
+                print("parent 1 appended")
                 new_population.append(population[first_parent_idx])
             else:
+                print("parent 2 appended")
                 new_population.append(population[second_parent_idx])
+        print(f"crossing - tries left: {tries}")
         first_parent_idx = list_to_cross_over.pop()
         second_parent_idx = list_to_cross_over.pop()
     return new_population
@@ -287,7 +297,6 @@ def selection(population, weight, elite_count, initial_population_size):
     list_to_cross_over = list()
     for i in range(2*(initial_population_size-elite_count)):
         list_to_cross_over.append(proportions_indication_list[random_list.pop()])
-    print(list_to_cross_over)
     return list_to_cross_over
 
 
@@ -344,10 +353,9 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
             const_counter = 0
         else:
             const_counter = const_counter + 1
-        if iteration % 100 == 0:
+        if iteration % 5 == 0:
             print(f"Iteration: {iteration}, Maximum weight: {max(list_of_rates)}")
         iteration = iteration + 1
-        print(iteration)
     end = time.process_time()
     end1 = time.time()
     print(f"Elapsed time: {end1 - start1}s")
@@ -381,7 +389,7 @@ def main():
     #                     algorithm(0.7, 0.7, plot_name)
     timestamp1 = time.time()
     plot_name = f"Comparision-Run{timestamp1}"
-    algorithm(10, 2, 0.7, 0.7, 20, plot_name)
+    algorithm(20, 0, 0.7, 0.7, 20, plot_name)
 
 
 if __name__ == "__main__":
