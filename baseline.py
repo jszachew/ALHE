@@ -100,7 +100,7 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
     first_parent_idx = list_to_cross_over.pop()
     second_parent_idx = list_to_cross_over.pop()
     while len(list_to_cross_over) > 1:
-        #print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
+        print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
         ind_1 = population[first_parent_idx]
         ind_2 = population[second_parent_idx]
         ind_1_back = ind_1[:, split_rate:]
@@ -280,18 +280,20 @@ def selection(population, weight, elite_count, initial_population_size):
     for j in res:
         start_idx = end_idx
         proportion_sum = proportion_sum + population_weights[res[j]] * len(random_list) / population_sum
-        end_idx = min(end_idx + int(round(proportion_sum)), 999)
+        end_idx = min(int(round(proportion_sum)), 1000)
         #print(start_idx)
         #print(end_idx)
         for k in range(start_idx, end_idx):
             #print(f"{k}: {len(proportions_indication_list)} | {j}: {len(res)} ")
+            print(res[j])
             proportions_indication_list[k] = res[j]
     list_to_cross_over = list()
+    print(proportions_indication_list)
     #print(elite_count)
     #print(initial_population_size)
     for i in range(2*(initial_population_size-elite_count)):
         list_to_cross_over.append(proportions_indication_list[random_list.pop()])
-    #print(list_to_cross_over)
+    print(list_to_cross_over)
     return list_to_cross_over
 
 
