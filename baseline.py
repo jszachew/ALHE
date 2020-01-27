@@ -88,10 +88,11 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
     random.shuffle(list_of_split_rate)
     split_rate = list_of_split_rate.pop()
 
-    number_of_ind_to_cross = (int(len(population)*cross_over_probability/2))*2
+    number_of_ind_to_cross = (int(len(list_of_individuals_to_cross_over)*cross_over_probability/2))*2
+    number_of_kids_from_crossing = number_of_ind_to_cross/2;
     list_to_cross_over = list_of_individuals_to_cross_over[:number_of_ind_to_cross]
     list_to_pass_over = list_of_individuals_to_cross_over[number_of_ind_to_cross:]
-    list_to_pass_over = list_to_pass_over[:max(initial_population_size - number_of_ind_to_cross - elite_count, 0)]
+    list_to_pass_over = list_to_pass_over[:max(initial_population_size - number_of_kids_from_crossing - elite_count, 0)]
     while len(list_to_pass_over) > 0:
         pop = list_to_pass_over.pop()
         print(f"len population: {len(population)} | last list_to_pass_over: {pop}")
