@@ -54,8 +54,8 @@ def extract_gift_name(gift_name, separator='_'):
 
 def get_gift_dicts(filename='gifts.csv'):
     gift_frame = pd.read_csv(filename)
-    gift_idx_to_name_dict = [None]*7166
-    gift_idx_to_weight_dict = [None]*7166
+    gift_idx_to_name_dict = [None] * 7166
+    gift_idx_to_weight_dict = [None] * 7166
     for i, row in enumerate(gift_frame.values):
         gift_idx_to_name_dict[i] = row[0]
         gift_idx_to_weight_dict[i] = get_gift_weight_helper(row[0])
@@ -79,6 +79,8 @@ def chcek_if_all_bags_not_overloaded(individual, weight):
     return True
 
 
+
+
 def cross_over(population, cross_over_probability, list_of_individuals_to_cross_over, initial_population_size,
                elite_count, weights, max_tries):
     new_population = list()
@@ -86,21 +88,23 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
     random.shuffle(list_of_split_rate)
     random.shuffle(list_of_split_rate)
     random.shuffle(list_of_split_rate)
-    split_rate = list_of_split_rate.pop()
-
-    number_of_ind_to_cross = (int(len(population)*cross_over_probability/2))*2
+    # split_rate = list_of_split_rate.pop()
+    split_rate = 3000
+    start = time.time()
+    number_of_ind_to_cross = (int(len(list_of_individuals_to_cross_over) * cross_over_probability / 2)) * 2
+    number_of_kids_from_crossing = int(number_of_ind_to_cross / 2)
     list_to_cross_over = list_of_individuals_to_cross_over[:number_of_ind_to_cross]
     list_to_pass_over = list_of_individuals_to_cross_over[number_of_ind_to_cross:]
-    list_to_pass_over = list_to_pass_over[:max(initial_population_size - number_of_ind_to_cross - elite_count, 0)]
+    list_to_pass_over = list_to_pass_over[:max(initial_population_size - number_of_kids_from_crossing - elite_count, 0)]
     while len(list_to_pass_over) > 0:
         pop = list_to_pass_over.pop()
-        #print(f"len population: {len(population)} | last list_to_pass_over: {pop}")
+        # print(f"len population: {len(population)} | last list_to_pass_over: {pop}")
         new_population.append(population[pop])
 
     first_parent_idx = list_to_cross_over.pop()
     second_parent_idx = list_to_cross_over.pop()
     while len(list_to_cross_over) > 1:
-        #print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
+        # print(f"first_parent_idx: {first_parent_idx} | second_parent_idx:{second_parent_idx}")
         ind_1 = population[first_parent_idx]
         ind_2 = population[second_parent_idx]
         ind_1_back = ind_1[:, split_rate:]
@@ -112,9 +116,9 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
         tries = max_tries
         new_1_ok = False
         new_2_ok = False
-        if not check_if_min_3_gifts_in_every_bag(new_1) and not chcek_if_all_bags_not_overloaded(new_1, weights):
+        if  check_if_min_3_gifts_in_every_bag(new_1): #and chcek_if_all_bags_not_overloaded(new_1, weights):
             new_1_ok = True
-        if not check_if_min_3_gifts_in_every_bag(new_2) and not chcek_if_all_bags_not_overloaded(new_2, weights):
+        if check_if_min_3_gifts_in_every_bag(new_2): #and chcek_if_all_bags_not_overloaded(new_2, weights):
             new_2_ok = True
         while tries > 0 and len(list_of_split_rate) > 0 and not new_1_ok and not new_2_ok:
             split_rate = list_of_split_rate.pop()
@@ -124,9 +128,9 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
             ind_2_front = ind_2[:, :split_rate]
             new_1 = np.concatenate((ind_2_front, ind_1_back), axis=1)
             new_2 = np.concatenate((ind_1_front, ind_2_back), axis=1)
-            if not check_if_min_3_gifts_in_every_bag(new_1) and not chcek_if_all_bags_not_overloaded(new_1, weights):
+            if check_if_min_3_gifts_in_every_bag(new_1): #chcek_if_all_bags_not_overloaded(new_1, weights) and  :
                 new_1_ok = True
-            if not check_if_min_3_gifts_in_every_bag(new_2) and not chcek_if_all_bags_not_overloaded(new_2, weights):
+            if  check_if_min_3_gifts_in_every_bag(new_2):  # chcek_if_all_bags_not_overloaded(new_2, weights) and:
                 new_2_ok = True
             tries = tries - 1
         if new_1_ok and new_2_ok:
@@ -145,13 +149,14 @@ def cross_over(population, cross_over_probability, list_of_individuals_to_cross_
                 new_population.append(population[second_parent_idx])
         first_parent_idx = list_to_cross_over.pop()
         second_parent_idx = list_to_cross_over.pop()
-    print(f"crossing size:{len(new_population)}")
+    end = time.time()
+    print(f"{end-start}s")
     return new_population
 
 
 def mutate(population, weight_dict, mutation_probability, max_tries):
     list_of_individuals_to_mutate = list(range(0, len(population)))
-    number_of_ind_to_mutate = int(len(population)*mutation_probability)
+    number_of_ind_to_mutate = int(len(population) * mutation_probability)
 
     random.shuffle(list_of_individuals_to_mutate)
     random.shuffle(list_of_individuals_to_mutate)
@@ -180,7 +185,7 @@ def mutate(population, weight_dict, mutation_probability, max_tries):
             try_counter = try_counter - 1
         if try_counter != 0 and available_gifts != 0:
             individual[row_to_mutate][gift_to_add] = 1.0
-       # population[to_mutate_idx] = individual
+        # population[to_mutate_idx] = individual
         to_mutate_idx = list_of_individuals_to_mutate.pop()
 
 
@@ -216,12 +221,12 @@ def mutate_with_best_approx_potential(population, weight_dict, mutation_probabil
 
 
 def bag_sum(individual, weight_dict, bag_no):
-    return np.sum(weight_dict*individual[bag_no])
+    return np.sum(weight_dict * individual[bag_no])
 
 
 def count_rate(individual, weight_dict):
     used_gifts = np.sum(individual, axis=0)
-    return np.sum(weight_dict*used_gifts)
+    return np.sum(weight_dict * used_gifts)
 
 
 def my_generate_initial_population(weight_dict, initial_population_size):
@@ -242,26 +247,32 @@ def my_generate_initial_population(weight_dict, initial_population_size):
         for bag in range(0, 1000):
             gift_1 = presents_to_start[-1]
             gift_2 = presents_to_start[-2]
-            gift_3 = presents_to_start[-3]
-            gift_4 = presents_to_start[-4]
-            while weight_dict[gift_1] + weight_dict[gift_2] + \
-                    weight_dict[gift_3] + weight_dict[gift_4] > 50 and tries > 0:
+            while weight_dict[gift_1] + weight_dict[gift_2]  > 50 and tries > 0:
                 random.shuffle(presents_to_start)
                 gift_1 = presents_to_start[-1]
                 gift_2 = presents_to_start[-2]
-                gift_3 = presents_to_start[-3]
-                gift_4 = presents_to_start[-4]
                 tries = tries - 1
             individual[bag][gift_1] = 1
             individual[bag][gift_2] = 1
-            individual[bag][gift_3] = 1
-            individual[bag][gift_4] = 1
-            presents_to_start.pop()
-            presents_to_start.pop()
             presents_to_start.pop()
             presents_to_start.pop()
         list_of_initial_population.append(individual)
+    #np.save('20_2.npy', list_of_initial_population)
     return list_of_initial_population
+
+
+def tournament_selection(population, weight, elite_count, initial_population_size, tournament_size):
+    list_to_cross_over = list()
+    for i in range(2 * (initial_population_size - elite_count)):
+        choices = random.choices(range(len(population)), k=tournament_size)
+        best_val = 0
+        best = None
+        for choice in choices:
+            if count_rate(population[choice], weight) > best_val:
+                best_val = count_rate(population[choice], weight)
+                best = choice
+        list_to_cross_over.append(best)
+    return list_to_cross_over
 
 
 def selection(population, weight, elite_count, initial_population_size):
@@ -274,35 +285,32 @@ def selection(population, weight, elite_count, initial_population_size):
         w = count_rate(ind, weight)
         population_weights.append(w)
     population_sum = np.sum(population_weights)
-    res = sorted(range(len(population_weights)),reverse=True, key=lambda sub: population_weights[sub])
-    proportions_indication_list = list(range(0,1000))
+    res = sorted(range(len(population_weights)), reverse=True, key=lambda sub: population_weights[sub])
+    proportions_indication_list = list(range(0, 1000))
     end_idx = 0
     proportion_sum = 0
     for j in res:
         start_idx = end_idx
         proportion_sum = proportion_sum + population_weights[j] * len(random_list) / population_sum
         end_idx = min(int(round(proportion_sum)), 1000)
-        #print(start_idx)
-        #print(end_idx)
+        # print(start_idx)
+        # print(end_idx)
         for k in range(start_idx, end_idx):
-            #print(f"{k}: {len(proportions_indication_list)} | {j}: {len(res)} ")
-            #print(j)
+            # print(f"{k}: {len(proportions_indication_list)} | {j}: {len(res)} ")
+            # print(j)
             proportions_indication_list[k] = j
     list_to_cross_over = list()
-    #print(proportions_indication_list)
-    #print(elite_count)
-    #print(initial_population_size)
-    for i in range(2*(initial_population_size-elite_count)):
+    for i in range(2 * (initial_population_size - elite_count)):
         list_to_cross_over.append(proportions_indication_list[random_list.pop()])
-    #print(list_to_cross_over)
+
     return list_to_cross_over
 
 
 def create_plot(history, plot_name):
     plt.plot(history)
-    plt.title('model accuracy')
+    plt.title(plot_name)
     plt.ylabel('rate')
-    plt.xlabel('epoch')
+    plt.xlabel('itaration')
     plt.savefig(
         f"{plot_name}.png",
         dpi=700, frameon='false', bbox_inches='tight', )
@@ -318,23 +326,22 @@ def print_bags_to_file(individual, names, weight, filename):
 
 
 def get_elitists(population, elite_count, weight):
-    start = time.process_time()
     elitists = list()
     if elite_count == 0:
         return elitists
     sort = sorted(population, key=lambda g: count_rate(g, weight))
     for i in range(elite_count):
-        elitists.append(sort[-i])
-    end = time.process_time()
-    print(f"elitasis: {end-start}s")
+        elitists.append(sort[-(i+1)])
+
     return elitists
 
 
-def algorithm(initial_population_size, elite_count, mutation_probability, cross_over_probability, max_tries, plot_name):
+def algorithm(initial_population_size, elite_count, mutation_probability, cross_over_probability, max_tries, plot_name, elite_reuction=False, reduction_iteration=1000, reducion_size=1):
     name, weight = get_gift_dicts()
     start = time.process_time()
     start1 = time.time()
-    population = my_generate_initial_population(weight, initial_population_size)
+    #population = my_generate_initial_population(weight, initial_population_size)
+    population = np.load("20.npy")
     iteration = 0
     const_counter = 0
     list_of_results = list()
@@ -348,15 +355,21 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
           f"initial population size: {initial_population_size}", file=sample)
     print(f"Mutation probability: {mutation_probability}, Crossing-over probability: {cross_over_probability}",
           file=sample)
-    list_of_rates = list()
 
     while max_weight < limit and iteration < con.max_iterations and const_counter < con.max_iteration_with_same_max:
+        if elite_reuction:
+            if iteration % reduction_iteration == 0 and iteration != 0:
+                if reducion_size > 0:
+                    elite_count = max(elite_count - reducion_size, 0)
+                else:
+                    elite_count = min(elite_count - reducion_size, len(population)-2)
         elite = get_elitists(population, elite_count, weight)
         list_to_cross_over = selection(population, weight, elite_count, initial_population_size)
         population = cross_over(population, cross_over_probability, list_to_cross_over, initial_population_size,
                                 elite_count, weight, max_tries)
 
         mutate(population, weight, mutation_probability, max_tries)
+        list_of_rates = list()
         population.extend(elite)
         for g in population:
             w = count_rate(g, weight)
@@ -367,7 +380,7 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
             const_counter = 0
         else:
             const_counter = const_counter + 1
-        if iteration % 100 == 0:
+        if iteration % 2 == 0:
             print(f"Iteration: {iteration}, Maximum weight: {max(list_of_rates)}")
         iteration = iteration + 1
     end = time.process_time()
@@ -381,7 +394,7 @@ def algorithm(initial_population_size, elite_count, mutation_probability, cross_
         print(f"Iteration: {i}, best in iteration: {list_of_results[i]}", file=sample)
     print(f"PRESENTS IN BAGS", file=sample)
     print_bags_to_file(population[0], name, weight, sample)
-    create_plot(list_of_results, f"random-{plot_name}")
+    create_plot(list_of_results, f"{plot_name}")
     sample.close()
 
 
@@ -401,10 +414,126 @@ def main():
     #                                 f"i{con.max_iterations}-m{con.mutation_probability_list[l]}-" \
     #                                 f"c{con.cross_over_probability_list[m]}-t{con.max_tries[p]}"
     #                     algorithm(0.7, 0.7, plot_name)
-    timestamp1 = time.time()
-    plot_name = f"Comparision-Run{timestamp1}"
-    algorithm(10, 2, 0.7, 0.7, 20, plot_name)
 
+    # INITIAL 10
+    # initial_population = 10
+    # elitists = 0
+    # mutation_prop = 0.7
+    # crossover_propability = 0.7
+    # plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    # algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop,
+    #         cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+
+    # initial_population = 10
+    # elitists = 1
+    # mutation_prop = 0.7
+    # crossover_propability = 0.7
+    # plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    # algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+
+
+#
+# initial_population = 10
+# elitists = 2
+# mutation_prop = 0.7
+# crossover_propability = 0.7
+# plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+# algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
+
+    initial_population = 20
+    elitists = 3
+    mutation_prop = 0.7
+    crossover_propability = 0.3
+    plot_name = f"h{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}_elite_reducion_1_200"
+    algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=5, plot_name=plot_name, elite_reuction=True, reduction_iteration=200, reducion_size=1)
+
+    initial_population = 20
+    elitists = 0
+    mutation_prop = 0.7
+    crossover_propability = 0.3
+    plot_name = f"h{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}_elite_increase_1_200"
+    algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=5, plot_name=plot_name, elite_reuction=True, reduction_iteration=200, reducion_size=-1)
+    #####
+    #INITIAL 100
+    initial_population = 20
+    elitists = 0
+    mutation_prop = 0.7
+    crossover_propability = 0.3
+    plot_name = f"h{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=5, plot_name=plot_name)
+#
+    #
+    initial_population = 20
+    elitists = 6
+    mutation_prop = 0.7
+    crossover_propability = 0.3
+    plot_name = f"h{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=5, plot_name=plot_name)
+#
+#
+    initial_population = 20
+    elitists = 1
+    mutation_prop = 0.7
+    crossover_propability = 0.3
+    plot_name = f"h{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=5, plot_name=plot_name)
+###########3
+
+
+
+    #initial_population = 20
+    #elitists = 3
+    #mutation_prop = 0.7
+    #crossover_propability = 0.7
+    #plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    #algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
+    #initial_population = 20
+    #elitists = 10
+    #mutation_prop = 0.7
+    #crossover_propability = 0.7
+    #plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+    #algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
+#
+    #initial_population = 20
+    #elitists = 5
+    #mutation_prop = 0.7
+    #crossover_propability = 0.7
+    #plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}_elite_reducion_1_1000"
+    #algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name, elite_reuction=True, reduction_iteration=1000, reducion_size=1)
+#
+    #initial_population = 20
+    #elitists = 12
+    #mutation_prop = 0.7
+    #crossover_propability = 0.7
+    #plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}_elite_reducion_2_1000"
+    #algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name, elite_reuction=True, reduction_iteration=1000, reducion_size=3)
+#
+
+##INITIAL 1000
+# initial_population = 1000
+# elitists = 0
+# mutation_prop = 0.7
+# crossover_propability = 0.7
+# plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+# algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
+# initial_population = 1000
+# elitists = 10
+# mutation_prop = 0.7
+# crossover_propability = 0.7
+# plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+# algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
+# initial_population = 1000
+# elitists = 25
+# mutation_prop = 0.7
+# crossover_propability = 0.7
+# plot_name = f"initial-{initial_population}_elit-{elitists}_mutation-{mutation_prop}_crossover-{crossover_propability}"
+# algorithm(initial_population_size=initial_population, elite_count=elitists, mutation_probability=mutation_prop, cross_over_probability=crossover_propability, max_tries=20, plot_name=plot_name)
+#
 
 if __name__ == "__main__":
     main()
