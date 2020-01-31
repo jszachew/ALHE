@@ -184,7 +184,7 @@ def selection_for_mutation(population, weight, elite_count, initial_population_s
         for k in range(start_idx, end_idx):
             proportions_indication_list[k] = res[j]
     list_to_cross_over = list()
-    for i in range(2*(initial_population_size-elite_count)):
+    for i in range(initial_population_size-elite_count):
         list_to_cross_over.append(proportions_indication_list[random_list.pop()])
     return list_to_cross_over
 
@@ -212,11 +212,17 @@ def get_elitists(population, elite_count, weight):
     elitists = list()
     if elite_count == 0:
         return elitists
-    sort = sorted(population, key=lambda g: count_rate(g, weight))
+    sort = sorted(range(0, len(population)), reverse=True, key=lambda g: count_rate(population[g], weight))
     for i in range(elite_count):
-        elitists.append(sort[-(i+1)])
-
+        elitists.append(copy.deepcopy(population[sort[i]]))
+    print(f"elita: sort[:elite_count]")
     return elitists
+
+
+def get_best(population, weight):
+    sort = sorted(range(0, len(population)), reverse=True, key=lambda g: count_rate(population[g], weight))
+    print(f"best: index {sort[0]}, weight {count_rate(population[sort[0]], weight)}")
+    return population[sort[0]]
 
 
 def algorithm(initial_population_size, elite_count, mutation_probability, max_tries, plot_name,
@@ -239,14 +245,13 @@ def algorithm(initial_population_size, elite_count, mutation_probability, max_tr
     print(f"Mutation probability: {mutation_probability}",
           file=sample)
     while max_weight < limit and iteration < con.max_iterations and const_counter < con.max_iteration_with_same_max:
-        for c in range(len(population)):
-            check_if_every_gift_in_one_or_none_bag(population[0])
         if elite_reduction:
             if iteration % reduction_iteration == 0 and iteration != 0:
                 if reduction_size > 0:
                     elite_count = max(elite_count - reduction_size, 0)
                 else:
                     elite_count = min(elite_count - reduction_size, len(population)-2)
+        print(f"Iteration {iteration}")
         elite = get_elitists(population, elite_count, weight)
         selected_list = selection_for_mutation(population, weight, elite_count, initial_population_size)
         population = only_mutate(population, weight, mutation_probability, max_tries, selected_list)
@@ -264,6 +269,7 @@ def algorithm(initial_population_size, elite_count, mutation_probability, max_tr
         if iteration % 250 == 0:
             print(f"Iteration: {iteration}, Maximum weight: {max(list_of_rates)}")
         iteration = iteration + 1
+        get_best(population, weight)
     end = time.process_time()
     end1 = time.time()
     print(f"Elapsed time: {end1 - start1}s")
@@ -274,7 +280,7 @@ def algorithm(initial_population_size, elite_count, mutation_probability, max_tr
     for i in range(len(list_of_results)):
         print(f"Iteration: {i}, best in iteration: {list_of_results[i]}", file=sample)
     print(f"PRESENTS IN BAGS", file=sample)
-    best = get_elitists(population, 1, weight)
+    best = get_best(population, weight)
     if not check_if_every_gift_in_one_or_none_bag(best[0]):
         print(f"WARNING! Best individual has at least one present which is in more than one bag")
     else:
@@ -287,10 +293,10 @@ def main():
     for k in range(10):
         timestamp1 = time.time()
         plot_name = f"elite_0-{timestamp1}"
-        algorithm(con.initial_population_size, 0, con.mutation_probability, con.max_tries, plot_name)
+        # algorithm(con.initial_population_size, 0, con.mutation_probability, con.max_tries, plot_name)
         timestamp2 = time.time()
         plot_name = f"elite_1-{timestamp2}"
-        algorithm(con.initial_population_size, 1, con.mutation_probability, con.max_tries, plot_name)
+        # algorithm(con.initial_population_size, 1, con.mutation_probability, con.max_tries, plot_name)
         timestamp3 = time.time()
         plot_name = f"elite_5-{timestamp3}"
         algorithm(con.initial_population_size, 5, con.mutation_probability, con.max_tries, plot_name)
