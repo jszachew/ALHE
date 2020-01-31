@@ -215,7 +215,7 @@ def get_elitists(population, elite_count, weight):
     sort = sorted(range(0, len(population)), reverse=True, key=lambda g: count_rate(population[g], weight))
     for i in range(elite_count):
         elitists.append(copy.deepcopy(population[sort[i]]))
-    print(f"elita: sort[:elite_count]")
+    print(f"elita: {sort[:elite_count]}")
     return elitists
 
 
